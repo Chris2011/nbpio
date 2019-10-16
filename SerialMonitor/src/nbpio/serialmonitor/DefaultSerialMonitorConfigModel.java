@@ -5,12 +5,13 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import purejavacomm.CommPortIdentifier;
+import purejavacomm.PortInUseException;
 import purejavacomm.SerialPort;
 
 public class DefaultSerialMonitorConfigModel implements SerialMonitorConfigModel {
-    
+
     private static final String PORT_OWNER_NAME = DefaultSerialMonitorConfigModel.class.getName();
-    
+
     private String portName;
     private String baudRate;
     private String flowControl;
@@ -21,19 +22,20 @@ public class DefaultSerialMonitorConfigModel implements SerialMonitorConfigModel
     public DefaultSerialMonitorConfigModel() {
         // empty constructor
     }
-            
+
     @Override
     public String[] getAvailablePortNames() {
         Enumeration e = CommPortIdentifier.getPortIdentifiers();
-        
+
         List <String> portNames = new ArrayList<>();
         while (e.hasMoreElements()) {
             CommPortIdentifier portid = (CommPortIdentifier) e.nextElement();
             SerialPort port = null;
+
             try {
                 port = (SerialPort) portid.open(PORT_OWNER_NAME, 10);
                 portNames.add( port.getName() );
-            } catch (Exception ex) {
+            } catch (PortInUseException ex) {
                 // ignore
             } finally {
                 if ( port != null ) {
@@ -42,7 +44,7 @@ public class DefaultSerialMonitorConfigModel implements SerialMonitorConfigModel
                 }
             }
         }
-        
+
         return portNames.toArray( new String[portNames.size()] );
     }
 
@@ -54,7 +56,7 @@ public class DefaultSerialMonitorConfigModel implements SerialMonitorConfigModel
     @Override
     public String[] getAvailableFlowControl() {
         return new String[] { "NONE", "RTSCTS IN", "RTSCTS OUT", "XONXOFF IN", "XONXOFF OUT" };
-    }    
+    }
 
     @Override
     public String[] getAvailableDataBits() {
@@ -103,7 +105,11 @@ public class DefaultSerialMonitorConfigModel implements SerialMonitorConfigModel
 
     @Override
     public String getCurrentPortName() {
-        return portName != null ? portName : getAvailablePortNames()[0];
+        if (portName != null) {
+            return portName;
+        }
+
+        return (getAvailablePortNames() != null && getAvailablePortNames().length > 0) ? getAvailablePortNames()[0] : null;
     }
 
     @Override
@@ -122,7 +128,7 @@ public class DefaultSerialMonitorConfigModel implements SerialMonitorConfigModel
     }
 
     @Override
-    public String getCurrentFlowControl() {        
+    public String getCurrentFlowControl() {
         return flowControl != null ? flowControl : getDefaultFlowControl();
     }
 
@@ -167,7 +173,7 @@ public class DefaultSerialMonitorConfigModel implements SerialMonitorConfigModel
             .parity( parseParity( getCurrentParity() ) )
             .build();
     }
-    
+
     private int parseFlowControl( String value ) {
         int index = Arrays.asList( getAvailableFlowControl() ).indexOf( value );
         switch (index) {
@@ -185,7 +191,7 @@ public class DefaultSerialMonitorConfigModel implements SerialMonitorConfigModel
                 throw new IllegalArgumentException("Unknown flow control value: " + value);
         }
     }
-    
+
     private int parseStopBits( String value ) {
         int index = Arrays.asList( getAvailableStopBits()).indexOf( value );
         switch (index) {
@@ -199,9 +205,9 @@ public class DefaultSerialMonitorConfigModel implements SerialMonitorConfigModel
                 throw new IllegalArgumentException("Unknown stop bits value: " + value);
         }
     }
-    
+
     private int parseParity( String value ) {
         return Arrays.asList( getAvailableParities() ).indexOf( value );
     }
-    
+
 }

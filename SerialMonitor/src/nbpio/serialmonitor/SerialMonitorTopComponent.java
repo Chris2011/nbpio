@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.util.Properties;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
+import nbpio.serialmonitor.ui.configuration.SerialMonitorConfigDialog;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -16,7 +17,7 @@ import org.openide.util.NbBundle.Messages;
 )
 @TopComponent.Description(
     preferredID = "SerialMonitorTopComponent",
-    iconBase="nbpio/serialmonitor/serialPort.png", 
+    iconBase = "nbpio/serialmonitor/serialPort.png",
     persistenceType = TopComponent.PERSISTENCE_NEVER
 )
 @TopComponent.Registration(mode = "output", openAtStartup = false)
@@ -29,28 +30,42 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "CTL_SerialMonitorAction=Serial Monitor",
     "CTL_SerialMonitorTopComponent=Serial Monitor",
-    "LBL_Config=Configuration",
     "HINT_SerialMonitorTopComponent=This is a SerialMonitor window"
 })
 public final class SerialMonitorTopComponent extends TopComponent {
+    private static final Logger LOGGER = Logger.getLogger(SerialMonitorTopComponent.class.getName());
 
-    
-    private static final Logger LOGGER = Logger.getLogger( SerialMonitorTopComponent.class.getName() );
-    
     private SerialPortCommunicator communicator;
-    private SerialMonitorConfigModel configModel;
-    
-    public SerialMonitorTopComponent() {        
-        configModel = new DefaultSerialMonitorConfigModel();
+    private final SerialMonitorConfigModel configModel;
+    private final SerialMonitorDisplayPane serialMonitorDisplayPane;
+
+    public SerialMonitorTopComponent() {
         initComponents();
+
+        configModel = new DefaultSerialMonitorConfigModel();
+        communicator = new SerialPortCommunicator(configModel.getCurrentConfig());
+
+        handleConnection();
+
+        System.out.println("dasdasdasdadsasdasdasdasdasdasdasda--------------------------------------------------------dsdssdsds");
+
+        serialMonitorDisplayPane = new SerialMonitorDisplayPane((event) -> handleConfigure());
+        serialMonitorDisplayPane.connectToPort(communicator);
+
+        add(serialMonitorDisplayPane);
     }
-    
+
     private void initComponents() {
-        setName(Bundle.CTL_SerialMonitorTopComponent() + " - " + Bundle.LBL_Config());
+        setName(Bundle.CTL_SerialMonitorTopComponent());
         setToolTipText(Bundle.HINT_SerialMonitorTopComponent());
-        setLayout( new BorderLayout() );
-        add( new SerialMonitorConfigPane( configModel, (event) -> handleConnect() ));
-    }    
+        setLayout(new BorderLayout());
+
+//        communicator = new SerialPortCommunicator(configModel.getCurrentConfig());
+//
+//        add(new SerialMonitorDisplayPane(communicator, null));
+//        SerialMonitorConfigDialog serialMonitorConfigDialog = new SerialMonitorConfigDialog();
+//        serialMonitorConfigDialog.setVisible(true);
+    }
 
     @Override
     public void componentOpened() {
@@ -59,7 +74,7 @@ public final class SerialMonitorTopComponent extends TopComponent {
 
     @Override
     public void componentClosed() {
-        if ( communicator != null ) {
+        if (communicator != null) {
             communicator.disconnect();
         }
     }
@@ -75,27 +90,28 @@ public final class SerialMonitorTopComponent extends TopComponent {
         String version = p.getProperty("version");
         // TODO read your settings according to their version
     }
-    
-    
-    private void handleConnect() {
-        SerialPortConfig config = configModel.getCurrentConfig();
-        communicator = new SerialPortCommunicator( config );
-        SwingUtilities.invokeLater( () -> {
-            removeAll();
-            add( new SerialMonitorDisplayPane(communicator, (event) -> handleConfigure()) );
-            setName( Bundle.CTL_SerialMonitorTopComponent() + " - " + communicator.getConfig().getPortName() );
+
+    private void handleConnection() {
+        if (communicator != null) {
+            communicator.disconnect();
+        }
+
+        communicator = new SerialPortCommunicator(configModel.getCurrentConfig());
+
+        SwingUtilities.invokeLater(() -> {
+            final String portName = communicator.getConfig().getPortName();
+
+            setName(Bundle.CTL_SerialMonitorTopComponent() + " - " + (portName != null ? String.format("Connected to port: %s", portName) : "Not connected"));
+
             revalidate();
         });
     }
 
     private void handleConfigure() {
-        if ( communicator != null ) {
-            communicator.disconnect();
-        }
-        SwingUtilities.invokeLater( () -> {
-            removeAll();
-            add( new SerialMonitorConfigPane( configModel, (event) -> handleConnect()) );
-            setName(Bundle.CTL_SerialMonitorTopComponent() + " - " + Bundle.LBL_Config());
+        SwingUtilities.invokeLater(() -> {
+            SerialMonitorConfigDialog serialMonitorConfigDialog = new SerialMonitorConfigDialog(configModel, (event) -> handleConnection());
+            serialMonitorConfigDialog.setVisible(true);
+
             revalidate();
         });
     }

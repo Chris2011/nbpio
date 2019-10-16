@@ -3,7 +3,7 @@ package nbpio.serialmonitor;
 import java.util.Objects;
 
 public final class SerialPortConfig {
-    
+
     private final String portName;
     private final int baudRate;
     private final int flowControl;
@@ -43,7 +43,7 @@ public final class SerialPortConfig {
     public int getParity() {
         return parity;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 5;
@@ -83,14 +83,12 @@ public final class SerialPortConfig {
         if (this.parity != other.parity) {
             return false;
         }
-        if (!Objects.equals(this.portName, other.portName)) {
-            return false;
-        }
-        return true;
+
+        return Objects.equals(this.portName, other.portName);
     }
-    
-    
-    
+
+
+
     public static class Builder {
         private String portName;
         private int baudRate;
@@ -98,42 +96,42 @@ public final class SerialPortConfig {
         private int dataBits;
         private int stopBits;
         private int parity;
-        
+
         public Builder() {}
-        
+
         public Builder portName( String portName ) {
             this.portName = portName;
             return this;
         }
-        
+
         public Builder baudRate( int baudRate ) {
             this.baudRate = baudRate;
             return this;
         }
-        
+
         public Builder flowControl( int flowControl ) {
             this.flowControl = flowControl;
             return this;
         }
-        
+
         public Builder dataBits( int dataBits ) {
             this.dataBits = dataBits;
             return this;
         }
-        
+
         public Builder stopBits( int stopBits ) {
             this.stopBits = stopBits;
             return this;
         }
-        
+
         public Builder parity( int parity ) {
             this.parity = parity;
             return this;
         }
-        
+
         public SerialPortConfig build() {
             return new SerialPortConfig(this);
         }
-        
-    }    
+
+    }
 }
