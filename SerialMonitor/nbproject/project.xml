@@ -12,7 +12,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.26.1</specification-version>
+                        <specification-version>1.32</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -21,7 +21,15 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.48.1</specification-version>
+                        <specification-version>1.54</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.actions</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>6.44</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -29,7 +37,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>7.65.1</specification-version>
+                        <specification-version>7.73</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -37,7 +45,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>9.5.1</specification-version>
+                        <specification-version>9.12</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -45,7 +53,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>8.32.1</specification-version>
+                        <specification-version>8.38</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -53,7 +61,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>9.4.1</specification-version>
+                        <specification-version>9.13</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -61,7 +69,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>6.74.1</specification-version>
+                        <specification-version>6.82</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

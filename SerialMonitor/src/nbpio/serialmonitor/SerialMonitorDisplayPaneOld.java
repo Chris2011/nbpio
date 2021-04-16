@@ -41,9 +41,7 @@ import purejavacomm.NoSuchPortException;
 import purejavacomm.PortInUseException;
 import purejavacomm.UnsupportedCommOperationException;
 
-public class SerialMonitorDisplayPane extends JPanel {
-
-
+public class SerialMonitorDisplayPaneOld extends JPanel {
     private static final Charset MESSAGE_CHARSET = Charset.forName("US-ASCII");
 
     @StaticResource
@@ -79,11 +77,14 @@ public class SerialMonitorDisplayPane extends JPanel {
     private int previousScrollBarValue = -1;
     private int previousScrollBarMaximum = -1;
 
-
-    public SerialMonitorDisplayPane(ActionListener configureActionHandler ) {
+    public SerialMonitorDisplayPaneOld(ActionListener configureActionHandler) {
         this.configureActionHandler = configureActionHandler;
 
         initComponents();
+        
+        inputField.setEnabled(false);
+        crSwitch.setEnabled(false);
+        lfSwitch.setEnabled(false);
     }
 
     public void connectToPort(SerialPortCommunicator communicator) {
@@ -101,19 +102,19 @@ public class SerialMonitorDisplayPane extends JPanel {
                     formattedMessage = MessageFormat.format(rawMessage, communicator.getConfig().getPortName());
                 }
 
-                printNotificationLine( formattedMessage );
+                printNotificationLine(formattedMessage);
             }, (is) -> {
                 try {
                     byte[] buffer = new byte[is.available()];
                     int n = is.read(buffer);
-                    printInput(new String( buffer, 0, n ) );
+                    printInput(new String(buffer, 0, n));
                 } catch (IOException ex) {
-                    printNotificationLine( getLocalizedText("disconnectedNotification") );
+                    printNotificationLine(getLocalizedText("disconnectedNotification"));
                     communicator.disconnect();
                     communicator.startScanningForPort();
                 }
             });
-        }catch (TooManyListenersException | UnsupportedCommOperationException | PortInUseException | NoSuchPortException | IOException ex) {
+        } catch (TooManyListenersException | UnsupportedCommOperationException | PortInUseException | NoSuchPortException | IOException ex) {
             Exceptions.printStackTrace(ex);
         }
     }
@@ -122,7 +123,7 @@ public class SerialMonitorDisplayPane extends JPanel {
         return crSwitch.isSelected();
     }
 
-    public void setCRSelected( boolean selected ) {
+    public void setCRSelected(boolean selected) {
         crSwitch.setSelected(selected);
     }
 
@@ -130,12 +131,12 @@ public class SerialMonitorDisplayPane extends JPanel {
         return lfSwitch.isSelected();
     }
 
-    public void setLFSelected( boolean selected ) {
+    public void setLFSelected(boolean selected) {
         lfSwitch.setSelected(selected);
     }
 
     public void clear() {
-        SwingUtilities.invokeLater( () -> textPane.setText("") );
+        SwingUtilities.invokeLater(() -> textPane.setText(""));
     }
 
     private void disconnect() {
@@ -146,52 +147,55 @@ public class SerialMonitorDisplayPane extends JPanel {
     }
 
     public void reconnect() {
-        try {
-            communicator.reconnect();
-        } catch (NoSuchPortException | PortInUseException | IOException | UnsupportedCommOperationException | TooManyListenersException ex) {
-            Exceptions.printStackTrace(ex);
-        }
+//        try {
+//            communicator.reconnect();
+//        } catch (NoSuchPortException | PortInUseException | IOException | UnsupportedCommOperationException | TooManyListenersException ex) {
+//            Exceptions.printStackTrace(ex);
+//        }
     }
 
     private void initComponents() {
-        JPanel p1 = new JPanel( new BorderLayout() );
-        p1.add( createCenterPane(), BorderLayout.CENTER );
-        p1.add( createTopPane(), BorderLayout.NORTH );
+        JPanel p1 = new JPanel(new BorderLayout());
+        p1.add(createCenterPane(), BorderLayout.CENTER);
+        p1.add(createTopPane(), BorderLayout.NORTH);
 
-        setLayout( new BorderLayout() );
-        add( p1, BorderLayout.CENTER );
-        add( createSidePane(), BorderLayout.WEST );
+        setLayout(new BorderLayout());
+        add(p1, BorderLayout.CENTER);
+        add(createSidePane(), BorderLayout.WEST);
     }
 
     private JComponent createCenterPane() {
         textPane = new JTextPane();
-        textPane.setAutoscrolls( false );
+        textPane.setAutoscrolls(false);
         textPane.getCaret().setVisible(false);
-        textPane.setEditable( false );
-        textPane.setBackground( Color.BLACK );
-        textPane.setForeground( Color.LIGHT_GRAY );
-        textPane.addKeyListener( new KeyListener() {
+        textPane.setEditable(false);
+        textPane.setBackground(Color.BLACK);
+        textPane.setForeground(Color.LIGHT_GRAY);
+        textPane.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
                 char character = e.getKeyChar();
-                inputField.setText(""+character);
+                inputField.setText("" + character);
                 inputField.requestFocusInWindow();
             }
 
             @Override
-            public void keyPressed(KeyEvent e) {}
+            public void keyPressed(KeyEvent e) {
+            }
 
             @Override
-            public void keyReleased(KeyEvent e) {}
+            public void keyReleased(KeyEvent e) {
+            }
         });
-        textPane.addFocusListener( new FocusListener() {
+        textPane.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
                 repaint();
             }
 
             @Override
-            public void focusLost(FocusEvent e) {}
+            public void focusLost(FocusEvent e) {
+            }
         });
 
         DefaultCaret caret = (DefaultCaret) textPane.getCaret();
@@ -207,72 +211,72 @@ public class SerialMonitorDisplayPane extends JPanel {
 
         document = textPane.getStyledDocument();
 
-        scrollBarAdjustmentListener = (e) -> SwingUtilities.invokeLater( () ->  checkScrollBar(e) );
+        scrollBarAdjustmentListener = (e) -> SwingUtilities.invokeLater(() -> checkScrollBar(e));
 
-        JScrollPane scrollPane = new JScrollPane( textPane );
+        JScrollPane scrollPane = new JScrollPane(textPane);
         scrollPane.setWheelScrollingEnabled(true);
-        scrollPane.setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED );
-        scrollPane.setHorizontalScrollBarPolicy( JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED );
-        scrollPane.getVerticalScrollBar().addAdjustmentListener( scrollBarAdjustmentListener );
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.getVerticalScrollBar().addAdjustmentListener(scrollBarAdjustmentListener);
 
         return scrollPane;
     }
 
     private JComponent createTopPane() {
         inputField = new JTextField(40);
-        inputField.addActionListener( (e) -> sendMessage() );
-        inputField.setMaximumSize( inputField.getPreferredSize() );
+        inputField.addActionListener((e) -> sendMessage());
+        inputField.setMaximumSize(inputField.getPreferredSize());
 
-        JButton sendButton = new JButton( getLocalizedComponentText("sendButton") );
-        sendButton.addActionListener( (e) -> sendMessage() );
+        JButton sendButton = new JButton(getLocalizedComponentText("sendButton"));
+        sendButton.addActionListener((e) -> sendMessage());
 
         JPanel pane = new JPanel();
-        pane.setLayout( new BoxLayout(pane, BoxLayout.LINE_AXIS) );
+        pane.setLayout(new BoxLayout(pane, BoxLayout.LINE_AXIS));
 
         crSwitch = new JToggleButton("CR", true);
         lfSwitch = new JToggleButton("LF", true);
 
-        pane.add( inputField );
-        pane.add( Box.createRigidArea( new Dimension(5, 0) ) );
-        pane.add( sendButton );
-        pane.add( Box.createGlue() );
-        pane.add( crSwitch );
-        pane.add( Box.createRigidArea( new Dimension(5, 0) ) );
-        pane.add( lfSwitch );
+        pane.add(inputField);
+        pane.add(Box.createRigidArea(new Dimension(5, 0)));
+        pane.add(sendButton);
+        pane.add(Box.createGlue());
+        pane.add(crSwitch);
+        pane.add(Box.createRigidArea(new Dimension(5, 0)));
+        pane.add(lfSwitch);
 
-        pane.setBorder( BorderFactory.createEmptyBorder(3, 3, 3, 0) );
+        pane.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 0));
 
         return pane;
     }
 
     private JComponent createSidePane() {
-        JButton configureButton = new JButton( ImageUtilities.loadImageIcon(CONFIG_ICON, false) );
-        configureButton.setToolTipText( getLocalizedComponentTooltip("configureButton") );
+        JButton configureButton = new JButton(ImageUtilities.loadImageIcon(CONFIG_ICON, false));
+        configureButton.setToolTipText(getLocalizedComponentTooltip("configureButton"));
         configureButton.addActionListener(configureActionHandler);
 
         JButton disconnectButton = new JButton(ImageUtilities.loadImageIcon(DISCONNECT_ICON, false));
         disconnectButton.addActionListener((e) -> disconnect());
         disconnectButton.setToolTipText(getLocalizedComponentTooltip("disconnectButton"));
 
-        JButton reconnectButton = new JButton( ImageUtilities.loadImageIcon(RECONNECT_ICON, false) );
-        reconnectButton.addActionListener( (e) -> reconnect() );
-        reconnectButton.setToolTipText( getLocalizedComponentTooltip("reconnectButton") );
+        JButton reconnectButton = new JButton(ImageUtilities.loadImageIcon(RECONNECT_ICON, false));
+        reconnectButton.addActionListener((e) -> reconnect());
+        reconnectButton.setToolTipText(getLocalizedComponentTooltip("reconnectButton"));
 
-        JButton clearButton = new JButton( ImageUtilities.loadImageIcon(CLEAR_ICON, false) );
-        clearButton.addActionListener( (e) -> clear() );
-        clearButton.setToolTipText( getLocalizedComponentTooltip("clearButton") );
+        JButton clearButton = new JButton(ImageUtilities.loadImageIcon(CLEAR_ICON, false));
+        clearButton.addActionListener((e) -> clear());
+        clearButton.setToolTipText(getLocalizedComponentTooltip("clearButton"));
 
         JPanel pane = new JPanel();
-        pane.setLayout( new BoxLayout(pane, BoxLayout.PAGE_AXIS) );
-        pane.add( configureButton );
-        pane.add( Box.createRigidArea( new Dimension(0, 3) ) );
-        pane.add( reconnectButton );
-        pane.add( Box.createRigidArea( new Dimension(0, 3) ) );
-        pane.add( disconnectButton );
-        pane.add( Box.createRigidArea( new Dimension(0, 3) ) );
-        pane.add( clearButton );
+        pane.setLayout(new BoxLayout(pane, BoxLayout.PAGE_AXIS));
+        pane.add(configureButton);
+        pane.add(Box.createRigidArea(new Dimension(0, 3)));
+        pane.add(reconnectButton);
+        pane.add(Box.createRigidArea(new Dimension(0, 3)));
+        pane.add(disconnectButton);
+        pane.add(Box.createRigidArea(new Dimension(0, 3)));
+        pane.add(clearButton);
 
-        pane.setBorder( BorderFactory.createEmptyBorder(3, 3, 3, 3) );
+        pane.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
         return pane;
     }
 
@@ -281,16 +285,20 @@ public class SerialMonitorDisplayPane extends JPanel {
             String message = inputField.getText();
             inputField.setText("");
 
-            byte[] messageBytes = message.getBytes( MESSAGE_CHARSET );
+            byte[] messageBytes = message.getBytes(MESSAGE_CHARSET);
             OutputStream out = communicator.getOut();
 
             if (out != null) {
-                out.write( messageBytes );
+                out.write(messageBytes);
 
-                if ( isLFSelected() ) out.write('\n');
-                if ( isCRSelected() ) out.write('\r');
+                if (isLFSelected()) {
+                    out.write('\n');
+                }
+                if (isCRSelected()) {
+                    out.write('\r');
+                }
                 out.flush();
-                printOutputLine( new String(messageBytes, MESSAGE_CHARSET) );
+                printOutputLine(new String(messageBytes, MESSAGE_CHARSET));
             }
 
         } catch (IOException ex) {
@@ -298,28 +306,27 @@ public class SerialMonitorDisplayPane extends JPanel {
         }
     }
 
-    private void printOutputLine( String message ) {
-        print(message+"\n", outputStyle);
+    private void printOutputLine(String message) {
+        print(message + "\n", outputStyle);
     }
 
-    private void printInput( String message ) {
+    private void printInput(String message) {
         print(message, inputStyle);
     }
 
-    private void printNotificationLine( String message ) {
-        print(message+"\n", notificationStyle);
+    private void printNotificationLine(String message) {
+        print(message + "\n", notificationStyle);
     }
 
-    private void print( final String message, final Style style ) {
-        SwingUtilities.invokeLater( () -> {
+    private void print(final String message, final Style style) {
+        SwingUtilities.invokeLater(() -> {
             try {
-                document.insertString( document.getLength(), message, style );
+                document.insertString(document.getLength(), message, style);
             } catch (BadLocationException ex) {
                 Exceptions.printStackTrace(ex);
             }
         });
     }
-
 
     // Adapted from https://tips4java.wordpress.com/2013/03/03/smart-scrolling/
     private void checkScrollBar(AdjustmentEvent e) {
@@ -355,15 +362,15 @@ public class SerialMonitorDisplayPane extends JPanel {
         previousScrollBarMaximum = maximum;
     }
 
-    private static String getLocalizedComponentText( String componentName ) {
-        return NbBundle.getMessage(SerialMonitorDisplayPane.class, "SerialMonitorDisplayPane." + componentName + ".text"); // NOI18N
+    private static String getLocalizedComponentText(String componentName) {
+        return NbBundle.getMessage(SerialMonitorDisplayPaneOld.class, "SerialMonitorDisplayPane." + componentName + ".text"); // NOI18N
     }
 
-    private static String getLocalizedComponentTooltip( String componentName ) {
-        return NbBundle.getMessage(SerialMonitorDisplayPane.class, "SerialMonitorDisplayPane." + componentName + ".tooltip"); // NOI18N
+    private static String getLocalizedComponentTooltip(String componentName) {
+        return NbBundle.getMessage(SerialMonitorDisplayPaneOld.class, "SerialMonitorDisplayPane." + componentName + ".tooltip"); // NOI18N
     }
 
-    private static String getLocalizedText( String id ) {
-        return NbBundle.getMessage(SerialMonitorDisplayPane.class, "SerialMonitorDisplayPane." + id ); // NOI18N
+    private static String getLocalizedText(String id) {
+        return NbBundle.getMessage(SerialMonitorDisplayPaneOld.class, "SerialMonitorDisplayPane." + id); // NOI18N
     }
 }

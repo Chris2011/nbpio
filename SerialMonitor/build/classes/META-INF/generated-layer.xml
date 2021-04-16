@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="xml">
+        <folder name="entities">
+            <folder name="nbpio_serialmonitor">
+                <file name="SerialMonitor" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <!--nbpio.serialmonitor.SerialMonitorTopComponent-->
+                    <attr name="hint.originalPublicID" stringvalue="-//nbpio.serialmonitor//SerialMonitor//EN"/>
+                </file>
+            </folder>
+            <folder name="nbpio_serialmonitor_ui">
+                <file name="SerialMonitorDisplayPane" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <!--nbpio.serialmonitor.ui.SerialMonitorDisplayPaneTopComponent-->
+                    <attr name="hint.originalPublicID" stringvalue="-//nbpio.serialmonitor.ui//SerialMonitorDisplayPane//EN"/>
+                </file>
+            </folder>
+        </folder>
+        <folder name="memory">
+            <folder name="nbpio">
+                <folder name="serialmonitor">
+                    <file name="SerialMonitorTopComponent">
+                        <!--nbpio.serialmonitor.SerialMonitorTopComponent-->
+                        <attr name="settings.providerPath" stringvalue="xml/lookups//nbpio_serialmonitor/SerialMonitor.instance"/>
+                    </file>
+                    <folder name="ui">
+                        <file name="SerialMonitorDisplayPaneTopComponent">
+                            <!--nbpio.serialmonitor.ui.SerialMonitorDisplayPaneTopComponent-->
+                            <attr name="settings.providerPath" stringvalue="xml/lookups//nbpio_serialmonitor_ui/SerialMonitorDisplayPane.instance"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+        <folder name="lookups">
+            <folder name="nbpio_serialmonitor">
+                <file name="SerialMonitor.instance">
+                    <!--nbpio.serialmonitor.SerialMonitorTopComponent-->
+                    <attr methodvalue="org.netbeans.api.settings.Factory.create" name="instanceCreate"/>
+                    <attr methodvalue="org.netbeans.api.settings.Factory.properties" name="settings.convertor"/>
+                    <attr name="settings.instanceClass" stringvalue="nbpio.serialmonitor.SerialMonitorTopComponent"/>
+                    <attr name="settings.instanceOf" stringvalue="nbpio.serialmonitor.SerialMonitorTopComponent"/>
+                    <attr boolvalue="true" name="xmlproperties.preventStoring"/>
+                </file>
+            </folder>
+            <folder name="nbpio_serialmonitor_ui">
+                <file name="SerialMonitorDisplayPane.instance">
+                    <!--nbpio.serialmonitor.ui.SerialMonitorDisplayPaneTopComponent-->
+                    <attr methodvalue="org.netbeans.api.settings.Factory.create" name="instanceCreate"/>
+                    <attr methodvalue="org.netbeans.api.settings.Factory.properties" name="settings.convertor"/>
+                    <attr name="settings.instanceClass" stringvalue="nbpio.serialmonitor.ui.SerialMonitorDisplayPaneTopComponent"/>
+                    <attr name="settings.instanceOf" stringvalue="nbpio.serialmonitor.ui.SerialMonitorDisplayPaneTopComponent"/>
+                    <attr boolvalue="true" name="xmlproperties.preventStoring"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="Window">
+            <folder name="Tools">
+                <file name="nbpio-serialmonitor-SerialMonitorTopComponent.shadow">
+                    <!--nbpio.serialmonitor.SerialMonitorTopComponent-->
+                    <attr name="originalFile" stringvalue="Actions/Tools/nbpio-serialmonitor-SerialMonitorTopComponent.instance"/>
+                    <attr intvalue="950" name="position"/>
+                </file>
+            </folder>
+            <file name="nbpio-serialmonitor-ui-SerialMonitorDisplayPaneTopComponent.shadow">
+                <!--nbpio.serialmonitor.ui.SerialMonitorDisplayPaneTopComponent-->
+                <attr name="originalFile" stringvalue="Actions/Window/nbpio-serialmonitor-ui-SerialMonitorDisplayPaneTopComponent.instance"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Windows2">
+        <folder name="Components">
+            <file name="SerialMonitorTopComponent.settings">
+                <!--nbpio.serialmonitor.SerialMonitorTopComponent-->
+                <![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+  <instance class="nbpio.serialmonitor.SerialMonitorTopComponent"/>
+</settings>
+]]>
+            </file>
+            <file name="SerialMonitorDisplayPaneTopComponent.settings">
+                <!--nbpio.serialmonitor.ui.SerialMonitorDisplayPaneTopComponent-->
+                <![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+  <instance class="nbpio.serialmonitor.ui.SerialMonitorDisplayPaneTopComponent"/>
+</settings>
+]]>
+            </file>
+        </folder>
+        <folder name="Modes">
+            <folder name="output">
+                <file name="SerialMonitorTopComponent.wstcref">
+                    <!--nbpio.serialmonitor.SerialMonitorTopComponent-->
+                    <![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tc-ref PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN" "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
+<tc-ref version="2.0">
+  <tc-id id="SerialMonitorTopComponent"/>
+  <state opened="false"/>
+</tc-ref>
+]]>
+                </file>
+                <file name="SerialMonitorDisplayPaneTopComponent.wstcref">
+                    <!--nbpio.serialmonitor.ui.SerialMonitorDisplayPaneTopComponent-->
+                    <![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tc-ref PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN" "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
+<tc-ref version="2.0">
+  <tc-id id="SerialMonitorDisplayPaneTopComponent"/>
+  <state opened="false"/>
+</tc-ref>
+]]>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="Actions">
+        <folder name="Tools">
+            <file name="nbpio-serialmonitor-SerialMonitorTopComponent.instance">
+                <!--nbpio.serialmonitor.SerialMonitorTopComponent-->
+                <attr methodvalue="org.openide.windows.TopComponent.openAction" name="instanceCreate"/>
+                <attr name="component" newvalue="nbpio.serialmonitor.SerialMonitorTopComponent"/>
+                <attr name="preferredID" stringvalue="SerialMonitorTopComponent"/>
+                <attr bundlevalue="nbpio.serialmonitor.Bundle#CTL_SerialMonitorAction" name="displayName"/>
+                <attr name="iconBase" stringvalue="nbpio/serialmonitor/serialPort.png"/>
+            </file>
+        </folder>
+        <folder name="Window">
+            <file name="nbpio-serialmonitor-ui-SerialMonitorDisplayPaneTopComponent.instance">
+                <!--nbpio.serialmonitor.ui.SerialMonitorDisplayPaneTopComponent-->
+                <attr methodvalue="org.openide.windows.TopComponent.openAction" name="instanceCreate"/>
+                <attr name="component" newvalue="nbpio.serialmonitor.ui.SerialMonitorDisplayPaneTopComponent"/>
+                <attr name="preferredID" stringvalue="SerialMonitorDisplayPaneTopComponent"/>
+                <attr bundlevalue="nbpio.serialmonitor.ui.Bundle#CTL_SerialMonitorDisplayPaneAction" name="displayName"/>
+                <attr name="iconBase" stringvalue="nbpio/serialmonitor/serialPort.png"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

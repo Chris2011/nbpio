@@ -61,12 +61,12 @@ public class SerialMonitorConfigDialog extends JDialog {
     }
 
     private void enableComponents() {
-        parameterCombos.forEach( (c) -> c.setEnabled(true) );
+        parameterCombos.forEach((c) -> c.setEnabled(true));
         connectBtn.setEnabled(true);
     }
 
     private void disableComponents() {
-        parameterCombos.forEach( (c) -> c.setEnabled(false) );
+        parameterCombos.forEach((c) -> c.setEnabled(false));
         connectBtn.setEnabled(false);
     }
 
@@ -282,14 +282,10 @@ public class SerialMonitorConfigDialog extends JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void connectBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectBtnActionPerformed
-        System.out.println("ConnectActionHandler: " + connectActionHandler);
-
         if (connectActionHandler != null) {
-            connectActionHandler.actionPerformed(new ActionEvent(SerialMonitorConfigDialog.this, 0, "connect"));
+            connectActionHandler.actionPerformed(new ActionEvent(SerialMonitorConfigDialog.this, 0, "connectToPort"));
 
             this.setVisible(false);
-        } else {
-            System.out.println("no connect handler sent");
         }
     }//GEN-LAST:event_connectBtnActionPerformed
 

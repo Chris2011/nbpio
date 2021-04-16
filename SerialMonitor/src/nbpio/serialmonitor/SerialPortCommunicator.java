@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.TooManyListenersException;
 import java.util.function.Consumer;
-import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import purejavacomm.CommPortIdentifier;
 import purejavacomm.NoSuchPortException;
 import purejavacomm.PortInUseException;
@@ -14,9 +14,6 @@ import purejavacomm.SerialPortEvent;
 import purejavacomm.UnsupportedCommOperationException;
 
 public class SerialPortCommunicator {
-
-    private static final Logger LOGGER = Logger.getLogger( SerialPortCommunicator.class.getName() );
-
     private final SerialPortConfig config;
     private Consumer<Boolean> connectionHandler;
     private Consumer<InputStream> inputHandler;
@@ -24,7 +21,7 @@ public class SerialPortCommunicator {
     private InputStream in;
     private OutputStream out;
 
-    public SerialPortCommunicator( SerialPortConfig config ) {
+    public SerialPortCommunicator(SerialPortConfig config) {
         this.config = config;
     }
 
@@ -32,16 +29,19 @@ public class SerialPortCommunicator {
         return config;
     }
 
-    public void connect( Consumer<Boolean> connectionHandler, Consumer<InputStream> inputHandler ) throws TooManyListenersException, UnsupportedCommOperationException, PortInUseException, NoSuchPortException, IOException {
+    public void connect(Consumer<Boolean> connectionHandler, Consumer<InputStream> inputHandler) throws TooManyListenersException, UnsupportedCommOperationException, PortInUseException, NoSuchPortException, IOException {
         this.connectionHandler = connectionHandler;
         this.inputHandler = inputHandler;
 
-        if (config.getPortName() != null) {
-            CommPortIdentifier portid = CommPortIdentifier.getPortIdentifier( config.getPortName() );
+        final String portName = config.getPortName();
+
+        if (portName != null) {
+            CommPortIdentifier portid = CommPortIdentifier.getPortIdentifier(portName);
 
             port = (SerialPort) portid.open(getClass().getName(), 1000);
 
-            connectionHandler.accept(Boolean.FALSE);  // first connection
+            this.connectionHandler.accept(Boolean.FALSE);  // first connection
+
             setupPort();
         }
     }
@@ -54,23 +54,21 @@ public class SerialPortCommunicator {
         return out;
     }
 
-    public void reconnect() throws NoSuchPortException, PortInUseException, IOException, UnsupportedCommOperationException, TooManyListenersException {
-        disconnect();
-
-        final String portName = config.getPortName();
-
-        if (portName != null) {
-            CommPortIdentifier portid = CommPortIdentifier.getPortIdentifier(portName);
-
-            if ( portid != null ) {
-                port = (SerialPort) portid.open(getClass().getName(), 1000);
-                connectionHandler.accept(Boolean.TRUE);  // reconnection
-
-                setupPort();
-            }
-        }
-    }
-
+//    public void reconnect() throws NoSuchPortException, PortInUseException, IOException, UnsupportedCommOperationException, TooManyListenersException {
+//        disconnect();
+//
+//        final String portName = config.getPortName();
+//
+//        if (portName != null) {
+//            CommPortIdentifier portid = CommPortIdentifier.getPortIdentifier(portName);
+//
+//            port = (SerialPort) portid.open(getClass().getName(), 1000);
+//
+//            connectionHandler.accept(Boolean.TRUE);  // reconnection
+//
+//            setupPort();
+//        }
+//    }
 
     public void disconnect() {
         if (port != null) {
@@ -79,14 +77,16 @@ public class SerialPortCommunicator {
     }
 
     public void startScanningForPort() {
-        Thread t = new Thread( () -> {
-            while ( true ) {
+        Thread t = new Thread(() -> {
+            while (true) {
                 try {
-                    CommPortIdentifier portid = CommPortIdentifier.getPortIdentifier( config.getPortName() );
-                    if ( portid != null ) {
+                    CommPortIdentifier portid = CommPortIdentifier.getPortIdentifier(config.getPortName());
+                    if (portid != null) {
                         port = (SerialPort) portid.open(getClass().getName(), 1000);
+                        
                         connectionHandler.accept(Boolean.TRUE);  // reconnection
                         setupPort();
+
                         return;
                     }
                     Thread.sleep(1000);
@@ -94,7 +94,7 @@ public class SerialPortCommunicator {
                     return;
                 } catch (NoSuchPortException ex) {
                     // ignore
-                } catch (Exception ex) {
+                } catch (IOException | TooManyListenersException | PortInUseException | UnsupportedCommOperationException ex) {
                     ex.printStackTrace();
                 }
             }
@@ -103,17 +103,17 @@ public class SerialPortCommunicator {
     }
 
     private void setupPort() throws IOException, UnsupportedCommOperationException, TooManyListenersException {
+        JOptionPane.showMessageDialog(null, "in setupPort");
         in = port.getInputStream();
         out = port.getOutputStream();
         port.notifyOnDataAvailable(true);
         port.notifyOnOutputEmpty(false);
-        port.setFlowControlMode( config.getFlowControl() );
-        port.setSerialPortParams( config.getBaudRate(), config.getDataBits(), config.getStopBits(), config.getParity() );
-        port.addEventListener( (SerialPortEvent event) -> {
+        port.setFlowControlMode(config.getFlowControl());
+        port.setSerialPortParams(config.getBaudRate(), config.getDataBits(), config.getStopBits(), config.getParity());
+        port.addEventListener((SerialPortEvent event) -> {
             if (event.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
-                inputHandler.accept( in );
+                inputHandler.accept(in);
             }
         });
     }
-
 }

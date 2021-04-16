@@ -8,8 +8,8 @@ import nbpio.serialmonitor.ui.configuration.SerialMonitorConfigDialog;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
-import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
+import org.openide.windows.TopComponent;
 
 @ConvertAsProperties(
     dtd = "-//nbpio.serialmonitor//SerialMonitor//EN",
@@ -37,7 +37,7 @@ public final class SerialMonitorTopComponent extends TopComponent {
 
     private SerialPortCommunicator communicator;
     private final SerialMonitorConfigModel configModel;
-    private final SerialMonitorDisplayPane serialMonitorDisplayPane;
+    private final SerialMonitorDisplayPaneOld serialMonitorDisplayPane;
 
     public SerialMonitorTopComponent() {
         initComponents();
@@ -49,7 +49,7 @@ public final class SerialMonitorTopComponent extends TopComponent {
 
         System.out.println("dasdasdasdadsasdasdasdasdasdasdasda--------------------------------------------------------dsdssdsds");
 
-        serialMonitorDisplayPane = new SerialMonitorDisplayPane((event) -> handleConfigure());
+        serialMonitorDisplayPane = new SerialMonitorDisplayPaneOld((event) -> handleConfigure());
         serialMonitorDisplayPane.connectToPort(communicator);
 
         add(serialMonitorDisplayPane);
